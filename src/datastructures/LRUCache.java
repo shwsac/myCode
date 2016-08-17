@@ -52,7 +52,6 @@ public class LRUCache {
 
     public void insertToHead(Node n) {
 
-        Node temp = tail;
         tail.prev.next = null;
         tail = tail.prev;
 
