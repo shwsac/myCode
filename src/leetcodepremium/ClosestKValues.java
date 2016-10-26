@@ -2,8 +2,11 @@ package leetcodepremium;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.Stack;
 
 /*
  Given a non-empty binary search tree and a target value, find k values in the BST that are closest to the target.
@@ -83,5 +86,43 @@ public class ClosestKValues {
             queue.poll();
         }
         inorderTraversal(root.right, queue, target, k);
+    }
+    
+    //FU
+    /*
+     * Stack solution to replace the recursion way for inorder traversal
+Maintain a queue with K size, compare the head of queue and current value to make sure the minimum difference.
+When the head of queue has less difference to target than current node, stop iterate.
+     */
+    public List<Integer> closestKValuesII(TreeNode root, double target, int k) {
+        Queue<Integer> values = new LinkedList<>();
+
+        // build inorder traversal
+        Stack<TreeNode> stack = new Stack<>();
+        do {
+            while (root != null) {
+                stack.push(root);
+                root = root.left;
+            }
+            root = stack.pop();
+
+            // compare and insert to the queue
+            if(values.size() < k) {
+                values.add(root.val);
+            }else{
+                int pop = values.peek();
+                if(Math.abs((double)root.val - target) < Math.abs((double)pop - target)) {
+                    values.poll();
+                    values.add(root.val);
+                }else
+                    break;
+            }
+
+            if(root.right !=null) {
+                root = root.right;
+            }else
+                root = null;
+        } while (!stack.isEmpty());
+        return new ArrayList<Integer>(values);
     }
 }
